@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Management</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+    }
+
+    /* Header */
+    .navbar {
+      background-color: #1c1c1c;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .navbar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .navbar input[type="text"] {
+      padding: 6px;
+      width: 200px;
+      border-radius: 5px;
+      border: none;
+      margin-left: 30px;
+    }
+
+    .navbar button {
+      padding: 6px 12px;
+      background-color: #333;
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    /* Main content */
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+    }
+
+    .add-button {
+      float: right;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: black;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar input[type="text"] {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="brand">HR Management</div>
+  <div>
+    <a href="#">Home</a>
+    <a href="#">Contact</a>
+    <input type="text" placeholder="Search...">
+    <button>Search</button>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Employee</h2>
+  <button class="add-button">+ Add</button>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Position</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Fatima Beatriz</td>
+        <td>Fatima Beatriz@gmail.com</td>
+        <td>0985674321</td>
+        <td>Staff</td>
+        <td>
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Gabriel Hanna</td>
+        <td>Gabriel Hanna@gmail.com</td>
+        <td>0353674231</td>
+        <td>Staff</td>
+        <td>
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Charles Diya</td>
+        <td>Charles Diya@gmail.com</td>
+        <td>0347658833</td>
+        <td>Staff</td>
+        <td>
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Frank Lamdo</td>
+        <td>Frank Lamdo@gmail.com</td>
+        <td>0975444768</td>
+        <td>Manager</td>
+        <td>
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Louis Tom</td>
+        <td>Louis Tom@gmail.com</td>
+        <td>0789568223</td>
+        <td>Staff</td>
+        <td>
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
