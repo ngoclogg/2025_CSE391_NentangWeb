@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Demo App</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #4f46e5;
+            --accent-color: #8b5cf6;
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+            --text-light: #1e293b;
+            --text-dark: #f1f5f9;
+            --border-light: #e2e8f0;
+            --border-dark: #334155;
+            --sidebar-width: 240px;
+            --header-height: 50px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        #app-shell {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        #sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: #ffffff;
+            border-right: 1px solid var(--border-light);
+            padding: 15px;
+            box-sizing: border-box;
+            transition: background-color 0.3s, border-color 0.3s;
+            overflow-y: auto;
+        }
+
+        body.dark-mode #sidebar {
+            background-color: #1e293b;
+            border-right: 1px solid var(--border-dark);
+        }
+
+        #sidebar h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+        }
+        #sidebar h2 i {
+            margin-right: 10px;
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text-light);
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        body.dark-mode #sidebar li a {
+             color: var(--text-dark);
+        }
+
+        #sidebar li a i {
+            margin-right: 10px;
+            width: 20px; /* Ensure icons align */
+            text-align: center;
+        }
+
+        #sidebar li a:hover {
+            background-color: #eef2ff;
+        }
+        body.dark-mode #sidebar li a:hover {
+            background-color: #334155;
+        }
+
+        #sidebar li a.active {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        body.dark-mode #sidebar li a.active {
+            background-color: var(--secondary-color);
+        }
+
+        #main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #header {
+            height: var(--header-height);
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode #header {
+            background-color: #1e293b;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        #header h1 {
+            font-size: 1.5em;
+            margin: 0;
+            color: var(--text-light);
+        }
+        body.dark-mode #header h1 {
+             color: var(--text-dark);
+        }
+
+        #theme-toggle {
+            background: none;
+            border: 1px solid var(--border-light);
+            color: var(--text-light);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+        body.dark-mode #theme-toggle {
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+        #theme-toggle:hover {
+            background-color: #f1f5f9;
+        }
+        body.dark-mode #theme-toggle:hover {
+            background-color: #334155;
+        }
+
+        #content-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--bg-light);
+            transition: background-color 0.3s;
+        }
+        body.dark-mode #content-area {
+            background-color: var(--bg-dark);
+        }
+
+        /* Styles for Demo Components */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .card {
+            background-color: #1e293b;
+            border: 1px solid var(--border-dark);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        body.dark-mode .card h2 {
+             border-bottom-color: var(--border-dark);
+        }
+
+        input[type="text"], button {
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 1em;
+            background-color: #ffffff;
+            color: var(--text-light);
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode input[type="text"], body.dark-mode button {
+            background-color: #334155;
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+        input[type="text"] {
+             width: calc(100% - 22px); /* Account for padding and border */
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .preview {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .preview {
+            background-color: #1e293b;
+            border-color: var(--border-dark);
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: var(--accent-color);
+            margin: 20px 0;
+            transition: width 0.3s, background-color 0.3s;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
+
+        // --- Demo Components (Copied and adapted from original files) ---
+
+        // From usestate_demo.html
+        function InputDemo() {
+            const [text, setText] = useState('');
+            const handleChange = (e) => setText(e.target.value);
+            return (
+                <div className="card">
+                    <h2><i className="fas fa-keyboard"></i> useState Hook: Input</h2>
+                    <p>Nhập văn bản vào ô input:</p>
+                    <input type="text" value={text} onChange={handleChange} placeholder="Nhập văn bản..." />
+                    <div className="preview">
+                        <p><strong>Giá trị state hiện tại:</strong> {text || "(trống)"}</p>
+                        <p><strong>Độ dài:</strong> {text.length} ký tự</p>
+                    </div>
+                    <p><small>Mỗi khi bạn gõ, hàm setText được gọi để cập nhật state và component re-render.</small></p>
+                </div>
+            );
+        }
+
+        function CounterDemo() {
+            const [count, setCount] = useState(0);
+            const incrementWrong = () => { setCount(count + 1); setCount(count + 1); };
+            const incrementRight = () => { setCount(prev => prev + 1); setCount(prev => prev + 1); };
+            return (
+                <div className="card">
+                    <h2><i className="fas fa-sync-alt"></i> useState Hook: State Updates</h2>
+                    <p><strong>Giá trị hiện tại:</strong> {count}</p>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        <button onClick={incrementWrong}>+1 +1 (Sai)</button>
+                        <button onClick={incrementRight}>+1 +1 (Đúng)</button>
+                        <button onClick={() => setCount(0)}>Reset</button>
+                    </div>
+                </div>
+            );
+        }
+
+        // From useref_uselayouteffect_demo.html
+        function AutoFocusInput() {
+            const inputRef = useRef(null);
+            useEffect(() => { inputRef.current?.focus(); }, []);
+            return (
+                <div className="card">
+                    <h2><i className="fas fa-crosshairs"></i> useRef: Auto Focus Input</h2>
+                    <p>Input này sẽ tự động được focus khi demo được tải:</p>
+                    <input ref={inputRef} type="text" placeholder="Input này tự động được focus" />
+                    <p><small>useRef giúp truy cập trực tiếp đến DOM element.</small></p>
+                </div>
+            );
+        }
+
+        function CounterWithPrevious() {
+            const [count, setCount] = useState(0);
+            const prevCountRef = useRef();
+            useEffect(() => { prevCountRef.current = count; });
+            const prevCount = prevCountRef.current;
+            return (
+                <div className="card">
+                    <h2><i className="fas fa-history"></i> useRef: Lưu Trữ Giá Trị</h2>
+                    <p><strong>Giá trị hiện tại:</strong> {count}</p>
+                    <p><strong>Giá trị trước đó:</strong> {prevCount !== undefined ? prevCount : "Chưa có"}</p>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        <button onClick={() => setCount(count + 1)}>Tăng giá trị</button>
+                        <button onClick={() => setCount(0)}>Reset</button>
+                    </div>
+                    <p><small>useRef giúp lưu trữ giá trị giữa các lần render mà không gây re-render.</small></p>
+                </div>
+            );
+        }
+
+        function ResizeBoxDemo() {
+            const [width, setWidth] = useState(100);
+            const boxRef = useRef(null);
+            useLayoutEffect(() => {
+                if (boxRef.current) {
+                    const currentWidth = boxRef.current.offsetWidth;
+                    console.log(`Box width (useLayoutEffect): ${currentWidth}px`);
+                    boxRef.current.style.backgroundColor = currentWidth > 200 ? '#e74c3c' : 'var(--accent-color)';
+                }
+            }, [width]);
+            return (
+                <div className="card">
+                    <h2><i className="fas fa-ruler-combined"></i> useLayoutEffect: Đo Layout</h2>
+                    <p>useLayoutEffect chạy đồng bộ sau khi DOM cập nhật nhưng trước khi trình duyệt vẽ lại:</p>
+                    <div ref={boxRef} className="box" style={{ width: `${width}px` }}></div>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        <button onClick={() => setWidth(w => Math.min(w + 50, 400))}>Tăng kích thước</button>
+                        <button onClick={() => setWidth(100)}>Reset</button>
+                    </div>
+                    <p><small>useLayoutEffect giúp đọc layout từ DOM và thiết lập lại ngay lập tức, tránh nhấp nháy UI.</small></p>
+                </div>
+            );
+        }
+
+        // --- Application Shell Component ---
+        function App() {
+            const [activeDemo, setActiveDemo] = useState('useState');
+            const [isDarkMode, setIsDarkMode] = useState(false);
+
+            useEffect(() => {
+                document.body.classList.toggle('dark-mode', isDarkMode);
+            }, [isDarkMode]);
+
+            const demos = {
+                'useState': {
+                    name: 'useState Demos',
+                    icon: 'fas fa-toggle-on',
+                    component: () => <><InputDemo /><CounterDemo /></>
+                },
+                'useRef': {
+                    name: 'useRef Demos',
+                    icon: 'fas fa-memory',
+                    component: () => <><AutoFocusInput /><CounterWithPrevious /></>
+                },
+                'useLayoutEffect': {
+                    name: 'useLayoutEffect Demo',
+                    icon: 'fas fa-layer-group',
+                    component: () => <ResizeBoxDemo />
+                }
+            };
+
+            const ActiveComponent = demos[activeDemo].component;
+
+            return (
+                <div id="app-shell">
+                    <div id="sidebar">
+                        <h2><i className="fab fa-react"></i> React Demos</h2>
+                        <ul>
+                            {Object.keys(demos).map(key => (
+                                <li key={key}>
+                                    <a 
+                                        href="#"
+                                        className={activeDemo === key ? 'active' : ''}
+                                        onClick={(e) => { e.preventDefault(); setActiveDemo(key); }}
+                                    >
+                                        <i className={demos[key].icon}></i>
+                                        {demos[key].name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div id="main-content">
+                        <div id="header">
+                            <h1>{demos[activeDemo].name}</h1>
+                            <button id="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
+                                <i className={isDarkMode ? 'fas fa-sun' : 'fas fa-moon'}></i> 
+                                {isDarkMode ? ' Light Mode' : ' Dark Mode'}
+                            </button>
+                        </div>
+                        <div id="content-area">
+                            <ActiveComponent />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render vào DOM
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
