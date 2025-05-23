@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo useRef và useLayoutEffect</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .code {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: #3498db;
+            margin: 20px 0;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Demo Component sử dụng useRef để tự động focus input
+        function AutoFocusInput() {
+            // Tạo ref để truy cập DOM element
+            const inputRef = React.useRef(null);
+            
+            // useEffect để focus input khi component mount
+            React.useEffect(() => {
+                // Focus vào input khi component được render
+                inputRef.current.focus();
+            }, []);
+            
+            return (
+                <div className="card">
+                    <h2>Demo useRef - Auto Focus Input</h2>
+                    
+                    <div className="code">
+                        {`const inputRef = React.useRef(null);
+
+React.useEffect(() => {
+    // Focus vào input khi component được render
+    inputRef.current.focus();
+}, []);`}
+                    </div>
+                    
+                    <p>Input này sẽ tự động được focus khi trang tải:</p>
+                    <input 
+                        ref={inputRef}
+                        type="text" 
+                        placeholder="Input này tự động được focus"
+                    />
+                    
+                    <p><small>useRef giúp truy cập trực tiếp đến DOM element.</small></p>
+                </div>
+            );
+        }
+        
+        // Demo Component sử dụng useRef để lưu trữ giá trị giữa các lần render
+        function CounterWithPrevious() {
+            const [count, setCount] = React.useState(0);
+            // Sử dụng useRef để lưu trữ giá trị trước đó
+            const prevCountRef = React.useRef();
+            
+            // Cập nhật giá trị ref sau mỗi lần render
+            React.useEffect(() => {
+                prevCountRef.current = count;
+            });
+            
+            // Lấy giá trị trước đó (undefined trong lần render đầu tiên)
+            const prevCount = prevCountRef.current;
+            
+            return (
+                <div className="card">
+                    <h2>Demo useRef - Lưu Trữ Giá Trị Giữa Các Render</h2>
+                    
+                    <div className="code">
+                        {`const prevCountRef = React.useRef();
+                        
+React.useEffect(() => {
+    prevCountRef.current = count;
+});`}
+                    </div>
+                    
+                    <p><strong>Giá trị hiện tại:</strong> {count}</p>
+                    <p><strong>Giá trị trước đó:</strong> {prevCount !== undefined ? prevCount : "Chưa có"}</p>
+                    
+                    <button onClick={() => setCount(count + 1)}>Tăng giá trị</button>
+                    <button onClick={() => setCount(0)}>Reset</button>
+                    
+                    <p><small>useRef giúp lưu trữ giá trị giữa các lần render mà không gây re-render.</small></p>
+                </div>
+            );
+        }
+        
+        // Demo Component sử dụng useLayoutEffect
+        function ResizeBoxDemo() {
+            const [width, setWidth] = React.useState(100);
+            const boxRef = React.useRef(null);
+            
+            // Sử dụng useLayoutEffect để đo kích thước box sau khi render
+            // nhưng trước khi trình duyệt vẽ lại
+            React.useLayoutEffect(() => {
+                if (boxRef.current) {
+                    // Đọc kích thước hiện tại của box
+                    const currentWidth = boxRef.current.offsetWidth;
+                    
+                    // Log để demo
+                    console.log(`Box width: ${currentWidth}px`);
+                    
+                    // Thêm class animation nếu cần
+                    if (currentWidth > 200) {
+                        boxRef.current.style.backgroundColor = '#e74c3c';
+                    } else {
+                        boxRef.current.style.backgroundColor = '#3498db';
+                    }
+                }
+            }, [width]); // Chạy lại khi width thay đổi
+            
+            return (
+                <div className="card">
+                    <h2>Demo useLayoutEffect</h2>
+                    
+                    <div className="code">
+                        {`React.useLayoutEffect(() => {
+    if (boxRef.current) {
+        // Đọc kích thước hiện tại của box
+        const currentWidth = boxRef.current.offsetWidth;
+        
+        // Thay đổi style dựa trên kích thước
+        if (currentWidth > 200) {
+            boxRef.current.style.backgroundColor = '#e74c3c';
+        } else {
+            boxRef.current.style.backgroundColor = '#3498db';
+        }
+    }
+}, [width]);`}
+                    </div>
+                    
+                    <p>useLayoutEffect chạy đồng bộ sau khi DOM cập nhật nhưng trước khi trình duyệt vẽ lại:</p>
+                    
+                    <div 
+                        ref={boxRef}
+                        className="box"
+                        style={{ width: `${width}px` }}
+                    ></div>
+                    
+                    <div>
+                        <button onClick={() => setWidth(width + 50)}>Tăng kích thước</button>
+                        <button onClick={() => setWidth(100)}>Reset</button>
+                    </div>
+                    
+                    <p><small>useLayoutEffect giúp đọc layout từ DOM và thiết lập lại ngay lập tức, tránh nhấp nháy UI.</small></p>
+                </div>
+            );
+        }
+        
+        // Root Component
+        function App() {
+            return (
+                <div>
+                    <h1>Demo useRef và useLayoutEffect</h1>
+                    <AutoFocusInput />
+                    <CounterWithPrevious />
+                    <ResizeBoxDemo />
+                </div>
+            );
+        }
+        
+        // Render vào DOM
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
